@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($http_origin ~* "^(https|http)?:\/\/((?:www\.moladin\.com)|(?:.*\.moladin\.com)|(?:.*\.mofi\.id)|(?:.*\.jinny\.id)|(localhost)|(127.0.0.1))") {
+        set $cors "true";
+      }
+      if ($request_method = 'OPTIONS') {
+        set $cors "${cors}options";
+      }
+      if ($cors = "trueoptions") {
+        more_set_headers "Access-Control-Allow-Origin: *";
+        more_set_headers "Access-Control-Allow-Credentials: true";
+        return 204;
+      }
+      if ($cors = "true") {
+        more_set_headers "Access-Control-Allow-Origin: *";
+        more_set_headers "Access-Control-Allow-Credentials: true";
+      }
+      more_set_headers "Access-Control-Allow-Methods: *";
+      more_set_headers "Access-Control-Allow-Headers: *";
+  name: ingress-ptu-test-service
+  namespace: ptu-test-service
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - pintu.development.mofi.id
+      secretName: sectigo-development-wildcard-mofi-id
+  rules:
+    - host: pintu.development.mofi.id
+      http:
+        paths:
+          - backend:
+              service:
+                name: ptu-test-service-svc
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix
