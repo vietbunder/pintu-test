@@ -12,7 +12,7 @@ This repository contains the PTU Test Service, a simple Node.js application that
 
 ## Jenkins Pipeline
 
-## Key Stages:
+### Key Stages:
 
 1. **Environment Setup**:
    - Fetch and verify environment configurations for the pipeline.
@@ -31,5 +31,9 @@ This repository contains the PTU Test Service, a simple Node.js application that
 
 - The `/health` endpoint is used for Kubernetes liveness and readiness probes.
 - The CI/CD pipeline can be extended or customized within the `cicd/` directory.
+- Service can be consumed from the public internet using the DNS domain.
+
+
+
 
 https://pintu.development.mofi.id/
